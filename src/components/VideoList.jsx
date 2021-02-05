@@ -5,7 +5,7 @@ var VideoList = (props) => (
 
   <div videos={videos = (props.videos.length === 0) ? exampleVideoData : props.videos} className="video-list">
     {videos.map(video =>
-      <VideoListEntry video={video} />
+      <VideoListEntry clickHandler={(vid) => props.clickHandler(vid)} video={video} />
     )}
   </div>
 );
