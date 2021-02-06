@@ -1,6 +1,6 @@
 var Search = (props) => (
   <div className="search-bar form-inline">
-    <input onKeyPress={(e) => { _.debounce((data) => props.searchYouTube(data), 1000);} } className="form-control" type="text" />
+    <input onKeyPress={(event) => props.searchYouTube(event)} className="form-control" type="text" />
     <button className="btn hidden-sm-down">
       <span className="glyphicon glyphicon-search"></span>
     </button>

@@ -13,9 +13,11 @@ class App extends React.Component {
       videos: props.videos || [],
       video: props.video || {'id': {'videoId': 'MPRiw9iavJk'}, 'snippet': {'title': 'title', 'description': 'description'}}
     };
-    this.debounceSearch = _.debounce(
-      (options) => this.props.searchYouTube(options, (data) => this.loadSearch(data)),
-      1000);
+    this.debouncedSearch = _.debounce((data) => {
+      data.persist();
+      this.searchYouTube(data.target.value);
+    }, 1000);
+
   }
 
   clickHandler(video) {
@@ -23,7 +25,6 @@ class App extends React.Component {
   }
 
   loadSearch(videos) {
-    console.log('isLoaded');
     this.setState({'video': videos[0], 'videos': videos});
   }
 
@@ -32,8 +33,6 @@ class App extends React.Component {
   }
 
   searchYouTube(query) {
-    var target = query.target;
-    console.log(target);
     let options = {
       'key': YOUTUBE_API_KEY,
       'query': query,
@@ -47,7 +46,7 @@ class App extends React.Component {
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <Search searchYouTube={this.searchYouTube.bind(this)}/>
+            <Search searchYouTube={(e) => { e.persist(); this.debouncedSearch(e); }}/>
           </div>
         </nav>
         <div className="row">
