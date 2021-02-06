@@ -1,6 +1,7 @@
 import VideoList from './VideoList.js';
 import VideoPlayer from './VideoPlayer.js';
 import Search from './Search.js';
+import YOUTUBE_API_KEY from '../config/youtube.js';
 
 // In the ES6 spec, files are "modules" and do not share a top-level scope
 // `var` declarations will only exist globally where explicitly defined
@@ -10,14 +11,25 @@ class App extends React.Component {
     super(props);
     this.state = {
       videos: props.videos || [],
-      video: props.video
+      video: props.video || {'id': {'videoId': 'MPRiw9iavJk'}, 'snippet': {'title': 'title', 'description': 'description'}}
     };
-
   }
 
   clickHandler(video) {
-    this.setState({'video' : video});
-    this.render();
+    this.setState({'video': video});
+  }
+
+  loadSearch(videos) {
+    this.setState({'video': videos[0], 'videos': videos});
+  }
+
+  componentDidMount() {
+    let options = {
+      'key': YOUTUBE_API_KEY,
+      'query': 'React.js',
+      'max': 5
+    };
+    this.props.searchYouTube(options, (data) => this.loadSearch(data));
   }
 
   render() {
@@ -25,7 +37,7 @@ class App extends React.Component {
       <div>
         <nav className="navbar">
           <div className="col-md-6 offset-md-3">
-            <Search />
+            <Search searchYouTube={this.props.searchYouTube}/>
           </div>
         </nav>
         <div className="row">
@@ -39,7 +51,6 @@ class App extends React.Component {
       </div>
     );
   }
-
 }
 
 export default App;
